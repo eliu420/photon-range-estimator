@@ -41,12 +41,14 @@ for file in file_dict.keys():
         runs_dict[run]['Pack Voltage 1 V'] = runs_dict[run]['Pack Voltage 1 V']*10
         runs_dict[run]['Power 1 kW'] = runs_dict[run]['Pack Current 1 A']*runs_dict[run]['Pack Voltage 1 V']/1000
         runs_dict[run]['Speed kts'] = runs_dict[run]['Speed m/s']*1.944
-        runs_dict[run]['Coulombs Remain'] = runs_dict[run]['SOC 1 %']*batt_cap/runs_dict[run]['Pack Voltage 1 V']*1000*3600
+        runs_dict[run]['Distance nm'] = runs_dict[run]['Distance km']*0.539957
+        # runs_dict[run]['Coulombs Remain'] = runs_dict[run]['SOC 1 %']*batt_cap/runs_dict[run]['Pack Voltage 1 V']*1000*3600
 
         time_elapsed = runs_dict[run]['Time'].iloc[-1] - runs_dict[run]['Time'].iloc[0]
         speed_max = runs_dict[run]['Speed kts'].max()
         speed_avg = runs_dict[run]['Speed kts'].mean()
         battery_expended = runs_dict[run]['SOC 1 %'].iloc[0] - runs_dict[run]['SOC 1 %'].iloc[-1]
+        distance_traveled = runs_dict[run]['Distance nm'].iloc[-1] - runs_dict[run]['Distance nm'].iloc[0]
 
         file_summary.loc[len(file_summary.index)] = [
             file, 
@@ -54,5 +56,6 @@ for file in file_dict.keys():
             time_elapsed.seconds/60,
             speed_max,
             speed_avg,
-            battery_expended
+            battery_expended,
+            distance_traveled
             ]
