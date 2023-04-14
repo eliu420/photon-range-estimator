@@ -24,7 +24,9 @@ file_summary = pd.DataFrame({
     'Time (min)': [],
     'Max Speed (kts)': [],
     'Avg Speed (kts)': [],
-    'Battery Expended (%)': []
+    'Battery Expended (%)': [],
+    'Distance Traveled (nm)': [],
+    'Average Consumption (kWh/nm)': []
 })
 cnt = 0
 for file in file_dict.keys():
@@ -49,6 +51,7 @@ for file in file_dict.keys():
         speed_avg = runs_dict[run]['Speed kts'].mean()
         battery_expended = runs_dict[run]['SOC 1 %'].iloc[0] - runs_dict[run]['SOC 1 %'].iloc[-1]
         distance_traveled = runs_dict[run]['Distance nm'].iloc[-1] - runs_dict[run]['Distance nm'].iloc[0]
+        avg_consumption = (battery_expended*63/100)/distance_traveled
 
         file_summary.loc[len(file_summary.index)] = [
             file, 
@@ -57,5 +60,6 @@ for file in file_dict.keys():
             speed_max,
             speed_avg,
             battery_expended,
-            distance_traveled
+            distance_traveled,
+            avg_consumption
             ]
