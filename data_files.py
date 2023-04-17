@@ -44,6 +44,7 @@ for file in file_dict.keys():
         runs_dict[run]['Power 1 kW'] = runs_dict[run]['Pack Current 1 A']*runs_dict[run]['Pack Voltage 1 V']/1000
         runs_dict[run]['Speed kts'] = runs_dict[run]['Speed m/s']*1.944
         runs_dict[run]['Distance nm'] = runs_dict[run]['Distance km']*0.539957
+        # runs_dict[run]['SOC Interpolated'] = 
         # runs_dict[run]['Coulombs Remain'] = runs_dict[run]['SOC 1 %']*batt_cap/runs_dict[run]['Pack Voltage 1 V']*1000*3600
 
         time_elapsed = runs_dict[run]['Time'].iloc[-1] - runs_dict[run]['Time'].iloc[0]
