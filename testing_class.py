@@ -45,6 +45,10 @@ class testing():
         self.data['packVoltage'] = df['Pack Voltage 1 V']*10
         self.data['packCurrent'] = df['Pack Current 1 A']
         self.data['power'] = self.data['packVoltage'] * self.data['packCurrent'] / 1000.0 # kW
+
+        self.data['tripDistance'] = df['tripDistance']      # manually added in test loop
+        self.data['energyUsed'] = df['energyUsed']          # manually added in test loop
+        self.data['tripDuration'] = df['tripDuration']      # manually added in test loop
         
 
         return self.data
