@@ -37,18 +37,38 @@ class testing():
             }
 
 
+    def add_variables(self, df):
+        """Add calculated variables to testing DataFrame which show up in NMEA Server but aren't in CSV files"""
+
+        df['tripDistance'] = ''
+        df['tripDuration'] = ''
+        df['energyUsed'] = ''
+
+        for i in range(len(df)):
+            df['tripDistance'].iloc[i] = (df['Distance km'].iloc[i] - df['Distance km'].iloc[0])*.539957    # nautical miles
+            df['tripDuration'].iloc[i] = (df['Time'].iloc[i] - df['Time'].iloc[0]).seconds/60               # min
+            df['energyUsed'].iloc[i] = (df['SOC 1 %'].iloc[0] - df['SOC 1 %'].iloc[i])*58/100               # kWh
+        return df
+
+
     def parse_csv(self, df):
-        self.data['sog'] = df['Speed m/s']*1.944
+        """Interpret DataFrame values as data class values to replicate NMEA Server"""
+
+        self.data['sog'] = df['Speed m/s']*1.94384          # knots
         self.data['time'] = df['Time']
-        self.data['tripDistance'] = df['Distance km']*0.539957
+        self.data['totalDistance'] = df['Distance km']*0.539957
         self.data['soc'] = df['SOC 1 %']
         self.data['packVoltage'] = df['Pack Voltage 1 V']*10
         self.data['packCurrent'] = df['Pack Current 1 A']
-        self.data['power'] = self.data['packVoltage'] * self.data['packCurrent'] / 1000.0 # kW
 
+        '''Missing Variables'''
         self.data['tripDistance'] = df['tripDistance']      # manually added in test loop
         self.data['energyUsed'] = df['energyUsed']          # manually added in test loop
         self.data['tripDuration'] = df['tripDuration']      # manually added in test loop
-        
+
+        '''Calculated Columns'''
+        self.data['power'] = self.data['packVoltage'] * self.data['packCurrent'] / 1000.0   # kW    
 
         return self.data
+    
+    
