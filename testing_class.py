@@ -1,3 +1,7 @@
+import pandas as pd
+import matplotlib as plot
+
+
 class testing():
 
     def __init__(self):
@@ -71,4 +75,20 @@ class testing():
 
         return self.data
     
+test_instance = testing()
+
+
+file_path = 'L230413.CSV'
+rows_to_read = [[5600, 6150]]
+
+#skiprows helps us read certain sections of a run file.
+df = pd.read_csv(file_path, skiprows= lambda x : x not in range(rows_to_read [0][0], rows_to_read[0][1]+1))
+
+data = test_instance.parse_csv(df)
+
+#and then we call the algorithm_class and give it data output from the testing,
+#then we have output here in a plot to make sure it looks simlar to our notebook tests.
+
+
+
     
