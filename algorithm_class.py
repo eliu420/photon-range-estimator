@@ -13,7 +13,7 @@ class Range_est():
 
     def __init__(self):
 
-        if self.data['state_run']==1:
+        if self.data['state_run']==1: 
             initial_SOC = self.data['soc']
             initial_distance = self.data['tripDistance']
             initial_time = self.data['time']
@@ -23,7 +23,7 @@ class Range_est():
             current_distance = self.data['tripDistance']
             current_time = self.data['time']
         
-        batt_cap = self.data['soh'] * 63
+        batt_cap = self.data['soh'] * 58 #~58kWh is defined by Kreisel  
         energy_used = self.data['energyUsed']
         trip_mins = self.data['tripDuration']
 
