@@ -2,22 +2,6 @@
 class Range_est():
 
     def __init__(self):
-<<<<<<< HEAD
-
-        if self.data['state_run']==1: 
-            initial_SOC = self.data['soc']
-            initial_distance = self.data['tripDistance']
-            initial_time = self.data['time']
-
-        elif self.data['state_run'] != 1:       # need to fix dependant on current condition
-            current_SOC = self.data['soc']
-            current_distance = self.data['tripDistance']
-            current_time = self.data['time']
-        
-        batt_cap = self.data['soh'] * 58 #~58kWh is defined by Kreisel  
-        energy_used = self.data['energyUsed']
-        trip_mins = self.data['tripDuration']
-=======
         self.data['sog'] = sog
         self.data['time'] = time 
         self.data['totalDistance'] = totalDistance
@@ -29,7 +13,6 @@ class Range_est():
         self.data['tripDuration'] = tripDuration
         self.data['power'] = power
         self.data['soh'] = soh
->>>>>>> 79b4d04e02f7dda33a8fc7c1c28c934c6047ede4
 
     
     def overall_avg(self):
@@ -45,7 +28,7 @@ class Range_est():
         return avg_consumption, time_remaining, range_remaining
 
 
-    def rolling_avg(self, cached_avg, N):
+    def rolling_avg(self, cached_avg, N_minutes):
         """This function updates the range based on the trip duration. 
         Range will be calculated based on cached_avg (cached average energy consumption) for the first N minutes of the trip.
         After N minutes, range will be calculated with the average consumption for the given trip."""
@@ -54,7 +37,7 @@ class Range_est():
         roll_consumption = energyUsed/tripDistance          # kWh/nm
         range_remaining = 0                                 # nm
 
-        if tripDuration < N or roll_consumption==0:
+        if tripDuration < N_minutes or roll_consumption==0:
             range_remaining = batt/cached_avg      
         else:
             range_remaining = batt/roll_consumption   #nm
