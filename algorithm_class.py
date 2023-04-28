@@ -17,14 +17,16 @@ class Range_est():
 
     
     def overall_avg(self):
+
+        max_battery_kWh = 58
         '''Distance consumption version'''
         # avg_consumption = energyUsed/tripDistance               #kWh/nm
         # range_remaining = (soc*58/100)/avg_consumption          #nautical miles
 
         '''Time consumption version'''
         avg_consumption = self.data['energyUsed']/self.data['tripDuration']                  # kWh/min
-        time_remaining = self.data['soc']*(58*self.data['soh'])/100/avg_consumption          # min
-        range_remaining = time_remaining*(self.data['soh']/60)                  # nm
+        time_remaining = (self.data['soc']*max_battery_kWh/100)/avg_consumption          # min
+        range_remaining = time_remaining*(self.data['sog']/60)                  # nm
 
         return avg_consumption, time_remaining, range_remaining
 
