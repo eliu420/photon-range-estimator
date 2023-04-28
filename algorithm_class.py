@@ -9,7 +9,7 @@ class Range_est():
         self.data['soc'] = 0
         self.data['packVoltage']  = 0
         self.data['packVoltage']  = 0
-        self.data ['tripDistance'] = 0
+        self.data['tripDistance'] = 0
         self.data['energyUsed'] = 0
         self.data['tripDuration'] = 0
         self.data['power'] = 0
