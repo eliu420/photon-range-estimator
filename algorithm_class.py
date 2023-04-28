@@ -2,17 +2,17 @@
 class Range_est():
 
     def __init__(self):
-        self.data['sog'] = sog
-        self.data['time'] = time 
-        self.data['totalDistance'] = totalDistance
-        self.data['soc'] = soc 
-        self.data['packVoltage'] = packVoltage 
-        self.data['packCurrent'] = packCurrent
-        self.data['tripDistance'] = tripDistance
-        self.data['energyUsed'] = energyUsed
-        self.data['tripDuration'] = tripDuration
-        self.data['power'] = power
-        self.data['soh'] = soh
+        self.data['sog']
+        self.data['time']
+        self.data['totalDistance']
+        self.data['soc']
+        self.data['packVoltage'] 
+        self.data['packVoltage'] 
+        self.data ['tripDistance']
+        self.data['energyUsed']
+        self.data['tripDuration']
+        self.data['power']
+        self.data['soh']
 
     
     def overall_avg(self):
@@ -21,9 +21,9 @@ class Range_est():
         # range_remaining = (soc*58/100)/avg_consumption          #nautical miles
 
         '''Time consumption version'''
-        avg_consumption = energyUsed/tripDuration                  # kWh/min
-        time_remaining = soc*(58*soh)/100/avg_consumption          # min
-        range_remaining = time_remaining*(sog/60)                  # nm
+        avg_consumption = self.data['energyUsed']/self.data['tripDuration']                  # kWh/min
+        time_remaining = self.data['soc']*(58*self.data['soh'])/100/avg_consumption          # min
+        range_remaining = time_remaining*(self.data['soh']/60)                  # nm
 
         return avg_consumption, time_remaining, range_remaining
 
