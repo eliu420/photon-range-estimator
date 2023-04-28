@@ -42,7 +42,7 @@ class Range_est():
         else:
             range_remaining = batt/roll_consumption   #nm
 
-        return range_remaining
+        return range_remaining,roll_consumption
     
     # def rolling_avg(self, cached_avg, N):
     #     """This function is based on a rolling average consumption rate of N data points.
