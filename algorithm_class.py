@@ -2,7 +2,6 @@
 class Range_est():
 
     def __init__(self):
-        #test
         self.data = {}
         self.data['sog'] = 0
         self.data['time'] = 0
