@@ -33,11 +33,11 @@ class Range_est():
         Range will be calculated based on cached_avg (cached average energy consumption) for the first N minutes of the trip.
         After N minutes, range will be calculated with the average consumption for the given trip."""
 
-        batt = soc*(58*soh)/100                             
-        roll_consumption = energyUsed/tripDistance          # kWh/nm
+        batt = self.data['soc']*(58*self.data['soh'])/100                             
+        roll_consumption = self.data['energyUsed']/self.data['tripDuration']          # kWh/nm
         range_remaining = 0                                 # nm
 
-        if tripDuration < N_minutes or roll_consumption==0:
+        if self.data['tripDuration'] < N_minutes or roll_consumption==0:
             range_remaining = batt/cached_avg      
         else:
             range_remaining = batt/roll_consumption   #nm
