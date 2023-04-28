@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib as plot
+from algorithm_class import Range_est
 
 
 class testing():
@@ -78,13 +79,18 @@ class testing():
 test_instance = testing()
 
 
-file_path = 'L230413.CSV'
-rows_to_read = [[5600, 6150]]
+file_path = 'data/L230414.CSV'
+rows_to_read = [[300, 3300]]
 
 #skiprows helps us read certain sections of a run file.
 df = pd.read_csv(file_path, skiprows= lambda x : x not in range(rows_to_read [0][0], rows_to_read[0][1]+1))
 
-data = test_instance.parse_csv(df)
+df = test_instance.add_variables(df)
+
+for i in range(len(df)):
+    data = test_instance.parse_csv(df.iloc[i])
+    # avg_consumption, time_remaining, range_remaining = Range_est().overall_avg(data)
+    print(data)
 
 #and then we call the algorithm_class and give it data output from the testing,
 #then we have output here in a plot to make sure it looks simlar to our notebook tests.
