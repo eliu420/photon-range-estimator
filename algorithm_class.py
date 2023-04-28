@@ -2,17 +2,18 @@
 class Range_est():
 
     def __init__(self):
-        self.data['sog']
-        self.data['time']
-        self.data['totalDistance']
-        self.data['soc']
-        self.data['packVoltage'] 
-        self.data['packVoltage'] 
-        self.data ['tripDistance']
-        self.data['energyUsed']
-        self.data['tripDuration']
-        self.data['power']
-        self.data['soh']
+        self.data = {}
+        self.data['sog'] = 0
+        self.data['time'] = 0
+        self.data['totalDistance'] = 0
+        self.data['soc'] = 0
+        self.data['packVoltage']  = 0
+        self.data['packVoltage']  = 0
+        self.data ['tripDistance'] = 0
+        self.data['energyUsed'] = 0
+        self.data['tripDuration'] = 0
+        self.data['power'] = 0
+        self.data['soh'] = 0
 
     
     def overall_avg(self):
@@ -28,7 +29,7 @@ class Range_est():
         return avg_consumption, time_remaining, range_remaining
 
 
-    def rolling_avg(self, cached_avg, N_minutes):
+    def rolling_avg(self, cached_avg_energy, N_minutes):
         """This function updates the range based on the trip duration. 
         Range will be calculated based on cached_avg (cached average energy consumption) for the first N minutes of the trip.
         After N minutes, range will be calculated with the average consumption for the given trip."""
@@ -38,7 +39,7 @@ class Range_est():
         range_remaining = 0                                 # nm
 
         if self.data['tripDuration'] < N_minutes or roll_consumption==0:
-            range_remaining = batt/cached_avg      
+            range_remaining = batt/cached_avg_energy      
         else:
             range_remaining = batt/roll_consumption   #nm
 
