@@ -44,7 +44,8 @@ class testing():
 
     def add_variables(self, df):
         """Add calculated variables to testing DataFrame which show up in NMEA Server but aren't in CSV files"""
-
+        
+        df['Time'] = pd.to_datetime(df['Time'], format="%H:%M:%S")
         df['tripDistance'] = ''
         df['tripDuration'] = ''
         df['energyUsed'] = ''
@@ -80,7 +81,6 @@ class testing():
 test_instance = testing()
 
 file_path = 'data/L230414.CSV'
-# rows_to_read = [[300, 3300]]
 
 #skiprows helps us read certain sections of a run file.
 df = pd.read_csv(file_path) #, skiprows= lambda x : x not in range(rows_to_read [0][0], rows_to_read[0][1]+1))
