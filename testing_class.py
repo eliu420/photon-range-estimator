@@ -76,14 +76,15 @@ class testing():
 
         return self.data
     
+    
 test_instance = testing()
 
-
 file_path = 'data/L230414.CSV'
-rows_to_read = [[300, 3300]]
+# rows_to_read = [[300, 3300]]
 
 #skiprows helps us read certain sections of a run file.
-df = pd.read_csv(file_path, skiprows= lambda x : x not in range(rows_to_read [0][0], rows_to_read[0][1]+1))
+df = pd.read_csv(file_path) #, skiprows= lambda x : x not in range(rows_to_read [0][0], rows_to_read[0][1]+1))
+df = df[300:3300]
 
 df = test_instance.add_variables(df)
 
