@@ -24,9 +24,9 @@ class Range_est():
         # range_remaining = (soc*58/100)/avg_consumption          #nautical miles
 
         '''Time consumption version'''
-        avg_consumption = self.data['energyUsed']/self.data['tripDuration']                  # kWh/min
-        time_remaining = (self.data['soc']*max_battery_kWh/100)/avg_consumption          # min
-        range_remaining = time_remaining*(self.data['sog']/60)                  # nm
+        avg_consumption = data['energyUsed']/data['tripDuration']                  # kWh/min
+        time_remaining = (data['soc']58/100)/avg_consumption          # min
+        range_remaining = time_remaining(data['sog']/60)                  # nm
 
         return avg_consumption, time_remaining, range_remaining
 
