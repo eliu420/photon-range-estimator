@@ -9,7 +9,7 @@ class Range_est():
         self.data['soc'] = 0
         self.data['packVoltage']  = 0
         self.data['packVoltage']  = 0
-        self.data ['tripDistance'] = 0
+        self.data['tripDistance'] = 0
         self.data['energyUsed'] = 0
         self.data['tripDuration'] = 0
         self.data['power'] = 0
@@ -17,6 +17,8 @@ class Range_est():
 
     
     def overall_avg(self):
+
+        max_battery_kWh = 58
         '''Distance consumption version'''
         # avg_consumption = energyUsed/tripDistance               #kWh/nm
         # range_remaining = (soc*58/100)/avg_consumption          #nautical miles
