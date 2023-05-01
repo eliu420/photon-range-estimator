@@ -49,11 +49,13 @@ class testing():
         df['tripDistance'] = ''
         df['tripDuration'] = ''
         df['energyUsed'] = ''
+        df['energyAvailable'] = ''
 
         for i in range(len(df)):
             df['tripDistance'].iloc[i] = (df['Distance km'].iloc[i] - df['Distance km'].iloc[0])*.539957    # nautical miles
             df['tripDuration'].iloc[i] = (df['Time'].iloc[i] - df['Time'].iloc[0]).seconds/60               # min
             df['energyUsed'].iloc[i] = (df['SOC 1 %'].iloc[0] - df['SOC 1 %'].iloc[i])*58/100               # kWh
+            df['energyAvailable'].iloc[i] = df['SOC 1 %'].iloc[i]*58/100                                    # kWh
         return df
 
 
@@ -70,6 +72,7 @@ class testing():
         '''Missing Variables'''
         self.data['tripDistance'] = df['tripDistance']      # manually added in test loop
         self.data['energyUsed'] = df['energyUsed']          # manually added in test loop
+        self.data['energyAvailable'] = df['energyAvailable']          # manually added in test loop
         self.data['tripDuration'] = df['tripDuration']      # manually added in test loop
 
         '''Calculated Columns'''

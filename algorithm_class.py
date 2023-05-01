@@ -10,7 +10,7 @@ class range_est():
     def overall_dist_avg(self, data):
 
         trip_avg = data['energyUsed']/data['tripDistance']               #kWh/nm
-        range_remaining = (data['soc']*self.max_battery/100)/self.cached_avg          #nautical miles
+        range_remaining = data['energyAvailable']/trip_avg       #nautical miles
 
         return trip_avg, range_remaining
 
