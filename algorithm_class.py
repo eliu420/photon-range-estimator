@@ -16,7 +16,7 @@ class Range_est():
         self.data['soh'] = 0
 
     
-    def overall_avg(self):
+    def overall_avg(self, data):
 
         max_battery_kWh = 58
         '''Distance consumption version'''
