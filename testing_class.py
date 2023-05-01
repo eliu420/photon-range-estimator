@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib as plot
-from algorithm_class import Range_est
+from algorithm_class import range_est
 
 
 class testing():
@@ -79,17 +79,17 @@ class testing():
     
     
 test_instance = testing()
-
 file_path = 'data/L230414.CSV'
 
 #skiprows helps us read certain sections of a run file.
 df = pd.read_csv(file_path) #, skiprows= lambda x : x not in range(rows_to_read [0][0], rows_to_read[0][1]+1))
-
 df = test_instance.add_variables(df[300:3300])      # Add in variables like tripDistance and energyUsed on filtered dataset
 
 for i in range(len(df)):
     data = test_instance.parse_csv(df.iloc[i])
-    avg_consumption, time_remaining, range_remaining = Range_est().overall_avg(data)
+    # avg_consumption, time_remaining, range_remaining = Range_est().overall_time_avg(data)
+    avg_consumption, range_remaining = range_est(58).overall_dist_avg(data)
+
     print(range_remaining)
 
 #and then we call the algorithm_class and give it data output from the testing,

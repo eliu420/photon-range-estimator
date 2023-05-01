@@ -1,32 +1,25 @@
 
-class Range_est():
+class range_est():
 
-    def __init__(self):
-        self.data = {}
-        self.data['sog'] = 0
-        self.data['time'] = 0
-        self.data['totalDistance'] = 0
-        self.data['soc'] = 0
-        self.data['packVoltage']  = 0
-        self.data['packVoltage']  = 0
-        self.data['tripDistance'] = 0
-        self.data['energyUsed'] = 0
-        self.data['tripDuration'] = 0
-        self.data['power'] = 0
-        self.data['soh'] = 0
+    def __init__(self, batt):
 
-    
-    def overall_avg(self, data):
+        self.max_battery = batt   # kWh
+        self.cached_avg = 0     # kWh/nm
+     
 
-        max_battery_kWh = 58
-        '''Distance consumption version'''
-        # avg_consumption = energyUsed/tripDistance               #kWh/nm
-        # range_remaining = (soc*58/100)/avg_consumption          #nautical miles
+    def overall_dist_avg(self, data):
 
-        '''Time consumption version'''
+        trip_avg = data['energyUsed']/data['tripDistance']               #kWh/nm
+        range_remaining = (data['soc']*self.max_battery/100)/self.cached_avg          #nautical miles
+
+        return trip_avg, range_remaining
+
+
+    def overall_time_avg(self, data):
+
         avg_consumption = data['energyUsed']/data['tripDuration']                  # kWh/min
-        time_remaining = (data['soc']58/100)/avg_consumption          # min
-        range_remaining = time_remaining(data['sog']/60)                  # nm
+        time_remaining = (data['soc']*self.max_battery/100)/avg_consumption          # min # May eventually use energyRemaining if defined
+        range_remaining = time_remaining*(data['sog']/60)                  # nm
 
         return avg_consumption, time_remaining, range_remaining
 
@@ -46,6 +39,12 @@ class Range_est():
             range_remaining = batt/roll_consumption   #nm
 
         return range_remaining,roll_consumption
+    
+
+    def update_avg(self, trip_avg):
+        new_avg = (self.cached_avg + trip_avg)/2
+        self.cached_avg = new_avg
+        return self.cached_avg
     
     # def rolling_avg(self, cached_avg, N):
     #     """This function is based on a rolling average consumption rate of N data points.
