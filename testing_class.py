@@ -90,7 +90,7 @@ df = test_instance.add_variables(df[300:3300])      # Add in variables like trip
 for i in range(len(df)):
     data = test_instance.parse_csv(df.iloc[i])
     avg_consumption, time_remaining, range_remaining = Range_est().overall_avg(data)
-    # print(data)
+    print(range_remaining)
 
 #and then we call the algorithm_class and give it data output from the testing,
 #then we have output here in a plot to make sure it looks simlar to our notebook tests.
