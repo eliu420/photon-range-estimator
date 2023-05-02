@@ -40,6 +40,7 @@ class testing():
             'state_run': 0,
             'state_charge': 0
             }
+        
 
 
     def add_variables(self, df):
@@ -79,24 +80,30 @@ class testing():
         self.data['power'] = self.data['packVoltage'] * self.data['packCurrent'] / 1000.0   # kW    
 
         return self.data
-    
+
+
+# Values to be stored in inifile
+cached_avg = 5
+nRuns = 1
     
 test_instance = testing()
+file_path, rows_to_read = 'data/L230414.CSV', range(300, 3300)
+df = pd.read_csv(file_path, skiprows=range(1,rows_to_read[0]), nrows=len(rows_to_read))     # skiprows helps us read certain sections of a run file.
+df = test_instance.add_variables(df)                                                        # Add in variables like tripDistance and energyUsed on filtered dataset
 
-file_path = 'data/L230414.CSV'
-rows_to_read = range(300,3300)
-df = pd.read_csv(file_path, skiprows=range(1,rows_to_read[0]), nrows=len(rows_to_read))     #skiprows helps us read certain sections of a run file.
-df = test_instance.add_variables(df)      # Add in variables like tripDistance and energyUsed on filtered dataset
-
+# Simulate DataStream
 for i in range(len(df)):
     data = test_instance.parse_csv(df.iloc[i])
-    # avg_consumption, time_remaining, range_remaining = Range_est().overall_time_avg(data)
-    avg_consumption, range_remaining = range_est(58).overall_dist_avg(data)
-
+    range_remaining = range_est(58).overall_dist_avg(data, cached_avg)
     print(range_remaining)
 
-#and then we call the algorithm_class and give it data output from the testing,
-#then we have output here in a plot to make sure it looks simlar to our notebook tests.
+
+# Show how update average works over time
+cnt=0
+while cnt < 5:
+    cached_avg, nRuns = range_est(58).update_avg(data, cached_avg, nRuns)
+    print(cached_avg, nRuns)
+    cnt+=1
 
 
 
