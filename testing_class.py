@@ -82,11 +82,11 @@ class testing():
     
     
 test_instance = testing()
-file_path = 'data/L230414.CSV'
 
-#skiprows helps us read certain sections of a run file.
-df = pd.read_csv(file_path) #, skiprows= lambda x : x not in range(rows_to_read [0][0], rows_to_read[0][1]+1))
-df = test_instance.add_variables(df[300:3300])      # Add in variables like tripDistance and energyUsed on filtered dataset
+file_path = 'data/L230414.CSV'
+rows_to_read = range(300,3300)
+df = pd.read_csv(file_path, skiprows=range(1,rows_to_read[0]), nrows=len(rows_to_read))     #skiprows helps us read certain sections of a run file.
+df = test_instance.add_variables(df)      # Add in variables like tripDistance and energyUsed on filtered dataset
 
 for i in range(len(df)):
     data = test_instance.parse_csv(df.iloc[i])
