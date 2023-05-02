@@ -1,51 +1,53 @@
 
 class range_est():
 
-    def __init__(self, batt):
-
-        self.max_battery = batt   # kWh
-        self.cached_avg = 0     # kWh/nm
-     
-
-    def overall_dist_avg(self, data):
-
-        trip_avg = data['energyUsed']/data['tripDistance']               #kWh/nm
-        range_remaining = data['energyAvailable']/trip_avg       #nautical miles
-
-        return trip_avg, range_remaining
+    def __init__(self, battery_capacity):
+        self.max_battery = battery_capacity                         # kWh    
 
 
-    def overall_time_avg(self, data):
+    def overall_dist_avg(self, data, cached_avg):
+        """This function evaluates range remaining on the battery given historical distance consumption data (kWh/nm) from all past trips."""
+        range_remaining = int(data['energyAvailable']/cached_avg)        # nautical miles
 
-        avg_consumption = data['energyUsed']/data['tripDuration']                  # kWh/min
-        time_remaining = (data['soc']*self.max_battery/100)/avg_consumption          # min # May eventually use energyRemaining if defined
-        range_remaining = time_remaining*(data['sog']/60)                  # nm
-
-        return avg_consumption, time_remaining, range_remaining
+        return range_remaining
 
 
-    def rolling_avg(self, cached_avg_energy, N_minutes):
+    def overall_time_avg(self, data, cached_avg):
+        """This function evaluates range remaining on the battery given historical time consumption data (kWh/min) from all past trips."""
+        time_remaining = data['energyAvailable']/cached_avg         # min 
+        range_remaining = (time_remaining/60)*data['sog']           # nm
+
+        return time_remaining, range_remaining
+
+
+    def rolling_avg(self, cached_avg, N_minutes):
         """This function updates the range based on the trip duration. 
         Range will be calculated based on cached_avg (cached average energy consumption) for the first N minutes of the trip.
         After N minutes, range will be calculated with the average consumption for the given trip."""
 
-        batt = self.data['soc']*(58*self.data['soh'])/100                             
-        roll_consumption = self.data['energyUsed']/self.data['tripDuration']          # kWh/nm
-        range_remaining = 0                                 # nm
+        # Need a way to update rolling average every N minutes
+        roll_consumption = self.data['energyUsed']/self.data['tripDistance']        # kWh/nm
 
         if self.data['tripDuration'] < N_minutes or roll_consumption==0:
-            range_remaining = batt/cached_avg_energy      
+            range_remaining = self.data['energyAvailable']/cached_avg
         else:
-            range_remaining = batt/roll_consumption   #nm
+            # Insert a weighting function here (logarithmic?)
+            range_remaining = self.data['energyAvailable']/roll_consumption         # nm
 
-        return range_remaining,roll_consumption
+        return range_remaining, roll_consumption
     
 
-    def update_avg(self, trip_avg):
-        new_avg = (self.cached_avg + trip_avg)/2
-        self.cached_avg = new_avg
-        return self.cached_avg
+    def update_avg(self, data, cached_avg, nRuns):
+        """This function should be called whenever a trip is completed, updating the cached average.
+        It stores the average consumption rate as well as the number of runs it is averaged over."""
+        trip_avg = data['energyUsed']/data['tripDistance']                          # kWh/nm
+        new_avg = (nRuns*cached_avg + trip_avg)/(nRuns+1)
+        cached_avg = new_avg
+        nRuns += 1
+
+        return cached_avg, nRuns
     
+
     # def rolling_avg(self, cached_avg, N):
     #     """This function is based on a rolling average consumption rate of N data points.
     #     Any consumption rates that are not valid, or within the first N data points of the run,
