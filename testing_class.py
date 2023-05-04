@@ -47,6 +47,7 @@ class testing():
         """Add calculated variables to testing DataFrame which show up in NMEA Server but aren't in CSV files"""
         
         df['Time'] = pd.to_datetime(df['Time'], format="%H:%M:%S")
+        df['Distance nm'] = df['Distance km']*0.539957
         df['tripDistance'] = ''
         df['tripDuration'] = ''
         df['energyUsed'] = ''
@@ -80,6 +81,21 @@ class testing():
         self.data['power'] = self.data['packVoltage'] * self.data['packCurrent'] / 1000.0   # kW    
 
         return self.data
+    
+
+    def test_accuracy(self, df, range_list, interval):
+        df['Dist Prediction (nm)'] = range_list
+        N = range(interval, len(df), interval)
+        error_list = []
+        for n in N:
+            pred = df['Dist Prediction (nm)'].iloc[n] - df['Dist Prediction (nm)'].iloc[-1]     # predicted distance remaining at n minus prediction at the end
+            dist = df['Distance nm'].iloc[-1] - df['Distance nm'].iloc[n]                       # actual distance traveled since n
+            error = (pred - dist)**2
+            error_list.append(error)
+            print(n, 'Predicted:', round(pred, 2), '| Actual:', round(dist, 2), '| Error^2', round(error, 2))
+        run_error = sum(error_list)
+        
+        return run_error
 
 
 # Values to be stored in inifile
@@ -91,12 +107,16 @@ file_path, rows_to_read = 'data/L230414.CSV', range(300, 3300)
 df = pd.read_csv(file_path, skiprows=range(1,rows_to_read[0]), nrows=len(rows_to_read))     # skiprows helps us read certain sections of a run file.
 df = test_instance.add_variables(df)                                                        # Add in variables like tripDistance and energyUsed on filtered dataset
 
+range_list = []
 # Simulate DataStream
 for i in range(len(df)):
     data = test_instance.parse_csv(df.iloc[i])
     range_remaining = range_est(58).overall_dist_avg(data, cached_avg)
+    range_list.append(range_remaining)
     print(range_remaining)
 
+error = test_instance.test_accuracy(df, range_list, 500)
+print(error)
 
 # Show how update average works over time
 cnt=0

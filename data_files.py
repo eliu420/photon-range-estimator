@@ -67,3 +67,5 @@ for file in file_dict.keys():
             distance_traveled,
             avg_consumption
             ]
+        
+print(file_summary)
