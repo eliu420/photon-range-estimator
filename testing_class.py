@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib as plot
+import math
 from algorithm_class import range_est
 
 
@@ -83,7 +84,7 @@ class testing():
         return self.data
     
 
-    def test_accuracy(self, df, range_list, interval):
+    def test_accuracy(self, df, range_list, interval=1):
         df['Dist Prediction (nm)'] = range_list
         N = range(interval, len(df), interval)
         error_list = []
@@ -93,9 +94,11 @@ class testing():
             error = (pred - dist)**2
             error_list.append(error)
             print(n, 'Predicted:', round(pred, 2), '| Actual:', round(dist, 2), '| Error^2', round(error, 2))
-        run_error = sum(error_list)
+        run_error = math.sqrt(sum(error_list)/len(error_list))
+        accuracy = 1-run_error
+        print(int((accuracy)*100), '% Accuracy')
         
-        return run_error
+        return accuracy
 
 
 # Values to be stored in inifile
@@ -115,8 +118,8 @@ for i in range(len(df)):
     range_list.append(range_remaining)
     print(range_remaining)
 
-error = test_instance.test_accuracy(df, range_list, 500)
-print(error)
+score = test_instance.test_accuracy(df, range_list, 1)
+print(score)
 
 # Show how update average works over time
 cnt=0
