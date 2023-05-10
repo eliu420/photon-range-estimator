@@ -8,7 +8,7 @@ class range_est():
 
     def overall_dist_avg(self, data, cached_avg):
         """This function evaluates range remaining on the battery given historical distance consumption data (kWh/nm) from all past trips."""
-        range_remaining = int(data['energyAvailable']/cached_avg)        # nautical miles
+        range_remaining = data['energyAvailable']/cached_avg        # nautical miles
 
         return range_remaining
 
