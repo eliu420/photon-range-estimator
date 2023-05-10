@@ -1,3 +1,4 @@
+import math
 
 class range_est():
 
@@ -18,23 +19,6 @@ class range_est():
         range_remaining = (time_remaining/60)*data['sog']           # nm
 
         return time_remaining, range_remaining
-
-
-    def rolling_avg(self, cached_avg, N_minutes):
-        """This function updates the range based on the trip duration. 
-        Range will be calculated based on cached_avg (cached average energy consumption) for the first N minutes of the trip.
-        After N minutes, range will be calculated with the average consumption for the given trip."""
-
-        # Need a way to update rolling average every N minutes
-        roll_consumption = self.data['energyUsed']/self.data['tripDistance']        # kWh/nm
-
-        if self.data['tripDuration'] < N_minutes or roll_consumption==0:
-            range_remaining = self.data['energyAvailable']/cached_avg
-        else:
-            # Insert a weighting function here (logarithmic?)
-            range_remaining = self.data['energyAvailable']/roll_consumption         # nm
-
-        return range_remaining, roll_consumption
     
 
     def update_avg(self, data, cached_avg, nRuns):
@@ -46,6 +30,32 @@ class range_est():
         nRuns += 1
 
         return cached_avg, nRuns
+    
+
+    def rolling_avg(self, data, nMins, roll_energy, roll_distance):
+            """This function evaluates range remaining on the battery where 
+            every nMins, roll_energy and roll_distance are updated accordingly to 
+            calculate the rolling average consumption rate. A logarithmic scale is 
+            applied to adjust value of the rolling average overtime. 
+            """
+            if data['tripDuration'] % nMins:
+                curr_roll_energy = data['energyUsed'] - roll_energy
+                curr_roll_distance = data['tripDistance'] - roll_distance
+            
+            roll_consumption = curr_roll_energy/curr_roll_distance
+            curr_consumption = data['energyUsed']/data['tripDistance']
+            
+            """Might need to fix but idea is that weight to curr consumption
+            only applies when log(10) < 1, otherwise it would be subtracting 
+            a negative consumption rate which is incorrect (1-(n>=1)). 
+            """
+            weight = math.log(self.data['tripDuration'])
+            if weight < 1:  
+                roll_avg = weight * roll_consumption + (1-weight) * curr_consumption  
+            roll_avg = weight * roll_consumption                                      
+
+            range_remaining = int(data['energyAvailable']/roll_avg)
+            return range_remaining, curr_roll_energy, curr_roll_distance
     
 
     # def rolling_avg(self, cached_avg, N):
