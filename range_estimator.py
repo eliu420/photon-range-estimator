@@ -13,7 +13,7 @@ class range_est():
         self.alpha = 0.15                                           # Weighting parameter
         
         # used for rolling avg
-        self.n_mins = 5                                             # interval for updating rolling average
+        self.n_mins = 10                                             # interval for updating rolling average
         self.roll_energy = roll_energy                              # last energy useage, updated every n_mins
         self.roll_distance = roll_distance                          # last distance traveled, updated every n_mins
         self.roll_avg = 0 
@@ -32,7 +32,35 @@ class range_est():
     def overall_time_avg(self, data):
         """This function evaluates range remaining on the battery given historical time consumption data (kWh/min) from all past trips."""
         self.time_remaining = data['energyAvailable']/self.time_avg         # min 
-        self.range_remaining = (self.time_remaining/60)*data['sog']         # nm
+        trip_speed = data['tripDistance']/data['tripDuration']
+        self.range_remaining = (self.time_remaining/60)*trip_speed        # nm
+
+
+    def rolling_avg(self, data):
+        # Ryan's version
+        """This function evaluates range remaining on the battery where 
+        every nMins, roll_energy and roll_distance are updated accordingly to 
+        calculate the rolling average consumption rate. A fractional scale is 
+        applied to adjust weight of the rolling average overtime."""
+
+        if data['tripDuration'] % self.n_mins == 0:
+            curr_roll_energy = data['energyUsed'] - self.roll_energy
+            curr_roll_distance = data['tripDistance'] - self.roll_distance
+            self.roll_consumption = curr_roll_energy/curr_roll_distance
+            self.roll_energy = data['energyUsed']
+            self.roll_distance = data['tripDistance']
+
+        weight = 'n/a'
+        t = 'n/a'
+
+        if data['tripDuration'] <= self.n_mins:
+            self.roll_avg = self.dist_avg
+        elif data['tripDuration'] > self.n_mins:
+            t = data['tripDuration'] - self.n_mins
+            weight = t/(t+self.n_mins)
+            self.roll_avg = ((1-weight)*self.dist_avg) + (weight*self.roll_consumption)
+
+        self.range_remaining = data['energyAvailable']/self.roll_avg
 
 
     def update_avg(self, data):
@@ -52,7 +80,8 @@ class range_est():
         self.n_runs += 1
 
 
-    def rolling_avg(self, data, nMins, roll_energy, roll_distance):
+
+    def rolling_avg1(self, data, nMins, roll_energy, roll_distance):
         # Elliot's version
         """This function evaluates range remaining on the battery where 
         every nMins, roll_energy and roll_distance are updated accordingly to 
@@ -77,43 +106,8 @@ class range_est():
 
         range_remaining = int(data['energyAvailable']/roll_avg)
         return range_remaining, curr_roll_energy, curr_roll_distance
+                              
 
-    
-    
-    def rolling_avg1(self, data):
-        # Ryan's version
-        """This function evaluates range remaining on the battery where 
-        every nMins, roll_energy and roll_distance are updated accordingly to 
-        calculate the rolling average consumption rate. A logarithmic scale is 
-        applied to adjust value of the rolling average overtime. 
-        """
-
-        if data['tripDuration'] % self.n_mins == 0:
-            self.update_roll_avg(data)
-
-        alpha = math.log(data['tripDuration']+.0001)
-
-        if data['tripDuration'] <= self.n_mins:
-            self.roll_avg = self.dist_avg
-        elif alpha < 1:
-            self.roll_avg = ((1-self.alpha)*self.dist_avg) + (self.alpha*self.roll_consumption)
-        else: self.roll_avg = self.roll_consumption
-        
-        # print('Duration', round(data['tripDuration'],2), 
-        #       'roll_avg', self.roll_avg, 
-        #       'roll_energy', self.roll_energy)                                 
-
-        self.range_remaining = data['energyAvailable']/self.roll_avg
-
-
-    def update_roll_avg(self, data):
-        curr_roll_energy = data['energyUsed'] - self.roll_energy
-        curr_roll_distance = data['tripDistance'] - self.roll_distance
-
-        self.roll_consumption = curr_roll_energy/curr_roll_distance
-
-        self.roll_energy = data['energyUsed']
-        self.roll_distance = data['tripDistance']
     
 
 
