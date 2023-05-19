@@ -57,7 +57,8 @@ class range_est():
             self.roll_avg = self.dist_avg
         elif data['tripDuration'] > self.n_mins:
             t = data['tripDuration'] - self.n_mins
-            weight = t/(t+self.n_mins)
+            # weight = t/(t+self.n_mins)
+            weight = 0.15
             self.roll_avg = ((1-weight)*self.dist_avg) + (weight*self.roll_consumption)
 
         self.range_remaining = data['energyAvailable']/self.roll_avg
