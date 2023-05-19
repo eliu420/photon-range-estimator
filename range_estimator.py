@@ -32,7 +32,7 @@ class range_est():
     def overall_time_avg(self, data):
         """This function evaluates range remaining on the battery given historical time consumption data (kWh/min) from all past trips."""
         self.time_remaining = data['energyAvailable']/self.time_avg         # min 
-        trip_speed = data['tripDistance']/data['tripDuration']
+        trip_speed = data['tripDistance']/data['tripDuration']*3600
         self.range_remaining = (self.time_remaining/60)*trip_speed        # nm
 
 
@@ -43,7 +43,7 @@ class range_est():
         calculate the rolling average consumption rate. A fractional scale is 
         applied to adjust weight of the rolling average overtime."""
 
-        if data['tripDuration'] % self.n_mins == 0:
+        if (data['tripDuration']/60) % self.n_mins == 0:
             curr_roll_energy = data['energyUsed'] - self.roll_energy
             curr_roll_distance = data['tripDistance'] - self.roll_distance
             self.roll_consumption = curr_roll_energy/curr_roll_distance
@@ -53,10 +53,10 @@ class range_est():
         weight = 'n/a'
         t = 'n/a'
 
-        if data['tripDuration'] <= self.n_mins:
+        if (data['tripDuration']/60) <= self.n_mins:
             self.roll_avg = self.dist_avg
-        elif data['tripDuration'] > self.n_mins:
-            t = data['tripDuration'] - self.n_mins
+        elif (data['tripDuration']/60) > self.n_mins:
+            t = (data['tripDuration']/60) - self.n_mins
             # weight = t/(t+self.n_mins)
             weight = 0.15
             self.roll_avg = ((1-weight)*self.dist_avg) + (weight*self.roll_consumption)
@@ -73,7 +73,7 @@ class range_est():
         self.dist_avg = new_dist_avg
         # self.dist_avg = ((1-self.alpha)*self.dist_avg) + (self.alpha*dist_avg)
 
-        time_avg = data['energyUsed']/data['tripDuration']              # kWh/min
+        time_avg = data['energyUsed']/data['tripDuration']*60              # kWh/min
         new_time_avg = (self.n_runs*self.time_avg + time_avg)/(self.n_runs+1)
         self.time_avg = new_time_avg
         # self.time_avg = ((1-self.alpha)*self.time_avg) + (self.alpha*time_avg)
