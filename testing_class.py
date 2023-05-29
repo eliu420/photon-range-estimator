@@ -92,7 +92,8 @@ if not sys.warnoptions:
     warnings.simplefilter("ignore")
 
 
-# """Import Data from file manager"""
+"""Example"""
+# '''Import chosen Data from file manager'''
 # df = testing().add_variables(runs_dict['Run 10'])
 
 # '''Create algorithm instance'''
@@ -103,11 +104,11 @@ if not sys.warnoptions:
 # for i in range(len(df)):
 #     dataStream = testing().parse_csv(df.iloc[i])
 
-#     range_estimator.overall_dist_avg(dataStream)
+#     range_estimator.overall_avg(dataStream)
 #     # range_estimator.overall_time_avg(dataStream)
 #     # range_estimator.rolling_avg(dataStream)
     
-#     # print('Battery Remaining = %.1f percent | Range Remaining = %.1f nm' % (dataStream['soc'], range_estimator.range_remaining))
+#     print('Battery Remaining = %.1f percent | Range Remaining = %.1f nm' % (dataStream['soc'], range_estimator.range_remaining))
 #     time.sleep(.005)
 #     range_list.append(range_estimator.range_remaining)
 
