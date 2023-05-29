@@ -2,10 +2,10 @@
 UW EE 497/498 Capstone Project
 Developed by Ean Barnawell, Elliot Liu, Ryan Ostrander, Theo Reid
 
-# Purpose
+## Purpose
 This algorithm estimates the range remaining on the battery of an marine electric vehicle given a data stream of values including state of charge (SOC), distance and time traveled, current and voltage. It is designed to be implemented into Photon Marine's onboard UX system based on data from the BMS. 
 
-# Directory
+## Directory
 Below is a summary of the important files in this repository and what their purpose is:
 
 range_estimator.py is the output of this project to be implemented on the vessel. It is a class of different functions which includes multiple types of range algorithms attempted. Although the overall average proved to be most accurate, the others were kept in the class for transparency. 
@@ -16,6 +16,6 @@ testing_class.py is a class of functions which transform the rows of a DataFrame
 
 test_loop.ipynb is a jupyter notebook that was used throughout as a test platform for various development exercises. In its current form, it imports data_files, range_estimator, and testing_class and runs them in various ways to plot the results and compare them. 
 
-# How to use
+## How to use
 For an example of how to implement and test the algorithm, see the bottom of testing_class.py following the class definition. 
 
