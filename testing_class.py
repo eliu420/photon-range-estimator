@@ -92,22 +92,21 @@ if not sys.warnoptions:
     warnings.simplefilter("ignore")
 
 
-"""Example"""
+"""'''Example'''"""
 
-'''Import chosen Data from file manager'''
-df = testing().add_variables(runs_dict['Run 29'])
+df = testing().add_variables(runs_dict['Run 29'])       # Import Data from file manager and add variables
+range_estimator = range_est(58, 2.5, 0.3, 0, 0, 0)      # Create algorithm instance
+range_list = []                                         # Initiate list to save predictions
 
-'''Create algorithm instance'''
-range_estimator = range_est(58, 2.5, 0.3, 0, 0, 0)
-
-range_list = []
-"""Test Loop"""
+'''Test Loop'''
 for i in range(len(df)):
-    dataStream = testing().parse_csv(df.iloc[i])
-
-    range_estimator.overall_avg(dataStream)
-    # range_estimator.overall_time_avg(dataStream)
-    # range_estimator.rolling_avg(dataStream)
-    
+    dataStream = testing().parse_csv(df.iloc[i])        # Interpret .csv values as oneHelm values
+    range_estimator.overall_avg(dataStream)             # Run chosen range algorithm
     print('Battery Remaining = %.1f percent | Range Remaining = %.1f nm' % (dataStream['soc'], range_estimator.range_remaining))
     time.sleep(.005)
+    range_list.append(range_estimator.range_remaining)  # Add prediction to list for evaluation
+
+error = testing().test_accuracy(df, range_list)         # Evaluate average error for the trip
+
+
+    
