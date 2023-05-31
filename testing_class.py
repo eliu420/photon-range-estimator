@@ -93,24 +93,21 @@ if not sys.warnoptions:
 
 
 """Example"""
-# '''Import chosen Data from file manager'''
-# df = testing().add_variables(runs_dict['Run 10'])
 
-# '''Create algorithm instance'''
-# range_estimator = range_est(58, 2.5, 0.3, 0, 0, 0)
+'''Import chosen Data from file manager'''
+df = testing().add_variables(runs_dict['Run 29'])
 
-# range_list = []
-# """Test Loop"""
-# for i in range(len(df)):
-#     dataStream = testing().parse_csv(df.iloc[i])
+'''Create algorithm instance'''
+range_estimator = range_est(58, 2.5, 0.3, 0, 0, 0)
 
-#     range_estimator.overall_avg(dataStream)
-#     # range_estimator.overall_time_avg(dataStream)
-#     # range_estimator.rolling_avg(dataStream)
+range_list = []
+"""Test Loop"""
+for i in range(len(df)):
+    dataStream = testing().parse_csv(df.iloc[i])
+
+    range_estimator.overall_avg(dataStream)
+    # range_estimator.overall_time_avg(dataStream)
+    # range_estimator.rolling_avg(dataStream)
     
-#     print('Battery Remaining = %.1f percent | Range Remaining = %.1f nm' % (dataStream['soc'], range_estimator.range_remaining))
-#     time.sleep(.005)
-#     range_list.append(range_estimator.range_remaining)
-
-# error, errors_list = testing().test_accuracy(df, range_list)
-# print('Run Error = ', error)
+    print('Battery Remaining = %.1f percent | Range Remaining = %.1f nm' % (dataStream['soc'], range_estimator.range_remaining))
+    time.sleep(.005)
