@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib as plt
 import math
 import sys
 import time
@@ -22,7 +21,7 @@ class testing():
             'energyUsed': 0.0,      # kWh
             'totalDistance': 0,     # miles
             'minsRemaining': 0,     # mins, DC Detailed Status
-            'tripDuration': 0,      # mins
+            'tripDuration': 0,      # sec
             'packVoltage': 0,       # V, DC Voltage Current
             'packCurrent': 0.0,     # A, DC Voltage Current
             'rangeRemaining': 0
@@ -60,7 +59,7 @@ class testing():
         self.data['tripDistance'] = df['tripDistance']          # nm; manually added in test loop
         self.data['energyUsed'] = df['energyUsed']              # kWh; manually added in test loop
         self.data['energyAvailable'] = df['energyAvailable']    # kWh; manually added in test loop
-        self.data['tripDuration'] = df['tripDuration']          # min; manually added in test loop
+        self.data['tripDuration'] = df['tripDuration']          # sec; manually added in test loop
 
         '''Calculated Variables'''
         self.data['power'] = self.data['packVoltage']*self.data['packCurrent']/1000   # kW    
@@ -71,7 +70,7 @@ class testing():
     def test_accuracy(self, df, range_list, interval=500):
         """Add list of calculated range estimates to the dataframe and compare them with
         tripDistance between two points, A and B. Point B is always the last row of the data. 
-        The interval (in seconds) defines how often point A is re-defined and values are compared."""
+        The interval (in seconds) defines how often point A is re-defined and compared with B."""
 
         df['Dist Prediction (nm)'] = range_list
         N = range(interval, len(df), interval)
@@ -94,19 +93,16 @@ if not sys.warnoptions:
 
 """'''Example'''"""
 
-df = testing().add_variables(runs_dict['Run 29'])       # Import Data from file manager and add variables
-range_estimator = range_est(58, 2.5, 0.3, 0, 0, 0)      # Create algorithm instance
-range_list = []                                         # Initiate list to save predictions
+# df = testing().add_variables(runs_dict['Run 29'])       # Import Data from file manager and add variables
+# range_estimator = range_est(58, 2.5, 0.3, 0, 0, 0)      # Create algorithm instance
+# range_list = []                                         # Initiate list to save predictions
 
-'''Test Loop'''
-for i in range(len(df)):
-    dataStream = testing().parse_csv(df.iloc[i])        # Interpret .csv values as oneHelm values
-    range_estimator.overall_avg(dataStream)             # Run chosen range algorithm
-    print('Battery Remaining = %.1f percent | Range Remaining = %.1f nm' % (dataStream['soc'], range_estimator.range_remaining))
-    time.sleep(.005)
-    range_list.append(range_estimator.range_remaining)  # Add prediction to list for evaluation
+# '''Test Loop'''
+# for i in range(len(df)):
+#     dataStream = testing().parse_csv(df.iloc[i])        # Interpret .csv values as oneHelm values
+#     range_estimator.overall_avg(dataStream)             # Run chosen range algorithm
+#     print('Battery Remaining = %.1f percent | Range Remaining = %.1f nm' % (dataStream['soc'], range_estimator.range_remaining))
+#     time.sleep(.08)
+#     range_list.append(range_estimator.range_remaining)  # Add prediction to list for evaluation
 
-error = testing().test_accuracy(df, range_list)         # Evaluate average error for the trip
-
-
-    
+# error = testing().test_accuracy(df, range_list)         # Evaluate average error for the trip
