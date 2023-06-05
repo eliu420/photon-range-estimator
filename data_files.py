@@ -44,5 +44,3 @@ for file in file_dict.keys():
         runs_dict[run]['Time'] = pd.to_datetime(runs_dict[run]['Time'], format="%H:%M:%S")
         for col in df.columns[2:]:
             runs_dict[run][col] = pd.to_numeric(runs_dict[run][col])
-
-
